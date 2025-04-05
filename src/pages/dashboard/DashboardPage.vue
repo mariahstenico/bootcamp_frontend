@@ -3,12 +3,13 @@ import { DefaultTemplate } from '@/template'
 </script>
 
 <template>
-  <DefaultTemplate>
+  <default-template>
+    <template #title>Meu dashboard</template>
     <template #default>
       <div class="dashboard">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/19999/xlink"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
           width="1105.04"
           height="782.74"
           viewBox="0 0 1105.04 782.74"
@@ -945,7 +946,7 @@ import { DefaultTemplate } from '@/template'
         </svg>
       </div>
     </template>
-  </DefaultTemplate>
+  </default-template>
 </template>
 
 <style scoped>

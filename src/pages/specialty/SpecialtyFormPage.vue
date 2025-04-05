@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { DefaultTemplate } from '@/template'
 import { mdiCancel, mdiPlusCircle } from '@mdi/js'
-import type { StatusForm } from '@/interfaces/status'
+import type { SpecialtyForm } from '@/interfaces/specialty'
 import request from '@/engine/httpClient'
 import { useRoute } from 'vue-router'
 import { PageMode } from '@/enum'
@@ -17,19 +17,19 @@ const isLoadingForm = ref<boolean>(false)
 const id = route.params.id
 const pageMode = id ? PageMode.PAGE_UPDATE : PageMode.PAGE_INSERT
 
-const form = ref<StatusForm>({
+const form = ref<SpecialtyForm>({
   name: ''
 })
 
 const pageTitle = computed(() => {
-  return pageMode === PageMode.PAGE_UPDATE ? 'Editar status' : 'Cadastrar novo status'
+  return pageMode === PageMode.PAGE_UPDATE ? 'Editar especialidade' : 'Cadastrar nova especialidade'
 })
 
 const submitForm = async () => {
   isLoadingForm.value = true
-  const response = await request<StatusForm, null>({
+  const response = await request<SpecialtyForm, null>({
     method: pageMode == PageMode.PAGE_INSERT ? 'POST' : 'PUT',
-    endpoint: pageMode == PageMode.PAGE_INSERT ? 'status/insert' : `status/update/${id}`,
+    endpoint: pageMode == PageMode.PAGE_INSERT ? 'specialty/insert' : `specialty/update/${id}`,
     body: form.value
   })
 
@@ -37,10 +37,11 @@ const submitForm = async () => {
 
   toastStore.setToast({
     type: 'success',
-    text: `Status ${pageMode == PageMode.PAGE_INSERT ? 'criada' : 'alterada'} com sucesso!`
+    text: `Especialidade ${pageMode == PageMode.PAGE_INSERT ? 'criada' : 'alterada'} com sucesso!`
   })
 
-  router.push({ name: 'status-list' })
+  router.push({ name: 'specialty-list' })
+
   isLoadingForm.value = false
 }
 
@@ -48,14 +49,15 @@ const loadForm = async () => {
   if (pageMode === PageMode.PAGE_INSERT) return
 
   isLoadingForm.value = true
-  const statusFormResponse = await request<undefined, StatusForm>({
+
+  const specialtyFormResponse = await request<undefined, SpecialtyForm>({
     method: 'GET',
-    endpoint: `status/update/${id}`
+    endpoint: `specialty/update/${id}`
   })
 
-  if (statusFormResponse?.isError) return
+  if (specialtyFormResponse?.isError) return
 
-  form.value = statusFormResponse.data
+  form.value = specialtyFormResponse.data
   isLoadingForm.value = false
 }
 
@@ -65,13 +67,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <default-template>
+  <DefaultTemplate>
     <template #title>
       {{ pageTitle }}
     </template>
 
     <template #action>
-      <v-btn :prepend-icon="mdiCancel" :to="{ name: 'status-list' }"> Cancelar </v-btn>
+      <v-btn :prepend-icon="mdiCancel" :to="{ name: 'specialty-list' }"> Cancelar </v-btn>
       <v-btn color="primary" :prepend-icon="mdiPlusCircle" @click.prevent="submitForm">
         Salvar
       </v-btn>
@@ -82,7 +84,10 @@ onMounted(() => {
         <v-col cols="6">
           <v-text-field v-model.trim="form.name" label="Nome" hide-details />
         </v-col>
+        <v-col cols="2">
+          <v-text-field v-model.trim="form.scheduleDuration" label="Duração" hide-details />
+        </v-col>
       </v-row>
     </v-form>
-  </default-template>
+  </DefaultTemplate>
 </template>

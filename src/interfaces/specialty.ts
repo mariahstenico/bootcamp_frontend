@@ -1,6 +1,6 @@
 export interface ISpecialty {
   id: number
-  name: number
+  name: string
   scheduleDuration: string
 }
 
@@ -13,4 +13,8 @@ export type GetSpecialtyListRequest = {
 export type GetSpecialtyListResponse = {
   total: number
   items: ISpecialty[]
+}
+
+export type SpecialtyForm = {
+  name: ISpecialty['name']
 }
